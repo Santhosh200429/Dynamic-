@@ -227,3 +227,43 @@
   document.addEventListener('scroll', navmenuScrollspy);
 
 })();
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDUJF0sCeKwnZeE-5kjC7RkIoFYXl8c8Os",
+  authDomain: "dynamic-8c006.firebaseapp.com",
+  projectId: "dynamic-8c006",
+  storageBucket: "dynamic-8c006.appspot.com",
+  messagingSenderId: "445071478906",
+  appId: "1:445071478906:web:8e553ef2ded366ea51ebc3",
+  measurementId: "G-9VNXEKLXEY"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Get the container from index.html
+const projectsContainer = document.getElementById("projects-container");
+
+// Fetch projects from Firestore
+db.collection("projects").get().then((querySnapshot) => {
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+
+    // Create an HTML element for each project
+    const projectDiv = document.createElement("div");
+    projectDiv.classList.add("project");
+
+    projectDiv.innerHTML = `
+      <h2>${data.title}</h2>
+      <p>${data.description}</p>
+      <img src="${data.imageURL}" alt="${data.title}" width="200">
+      <br>
+      <a href="${data.githubLink}" target="_blank">GitHub</a> | 
+      <a href="${data.liveDemo}" target="_blank">Live Demo</a>
+    `;
+
+    // Append project to the container
+    projectsContainer.appendChild(projectDiv);
+  });
+});
